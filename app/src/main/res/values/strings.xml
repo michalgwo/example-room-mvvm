@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Example-Room</string>
+    <string name="name">Name</string>
+    <string name="email">Email</string>
+    <string name="save">Save</string>
+    <string name="clear_all">Clear All</string>
 </resources>

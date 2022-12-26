@@ -6,13 +6,67 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <EditText
+        android:id="@+id/etName"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="50dp"
+        android:ems="10"
+        android:hint="@string/name"
+        android:inputType="textPersonName"
+        android:minHeight="48dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:importantForAutofill="no" />
 
+    <EditText
+        android:id="@+id/etEmail"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="50dp"
+        android:ems="10"
+        android:hint="@string/email"
+        android:inputType="textEmailAddress"
+        android:minHeight="48dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etName"
+        android:importantForAutofill="no" />
+
+    <Button
+        android:id="@+id/bSave"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="5dp"
+        android:text="@string/save"
+        app:layout_constraintEnd_toStartOf="@+id/bClear"
+        app:layout_constraintStart_toStartOf="@+id/etEmail"
+        app:layout_constraintTop_toBottomOf="@+id/etEmail" />
+
+    <Button
+        android:id="@+id/bClear"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:text="@string/clear_all"
+        app:layout_constraintEnd_toEndOf="@+id/etEmail"
+        app:layout_constraintStart_toEndOf="@+id/bSave"
+        app:layout_constraintTop_toBottomOf="@+id/etEmail" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvDatabase"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/bClear"
+        app:layout_constraintStart_toStartOf="@+id/bSave"
+        app:layout_constraintTop_toBottomOf="@+id/bSave"
+        app:layout_constraintVertical_bias="0.0" />
 </androidx.constraintlayout.widget.ConstraintLayout>
