@@ -9,6 +9,9 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
 class UserViewModel(private val repo: UserRepository) : ViewModel() {
+    private var isUpdating = false
+    private var updatingUser: User? = null
+
     var users = repo.users
 
     var nameInput = MutableLiveData<String>()
@@ -23,32 +26,64 @@ class UserViewModel(private val repo: UserRepository) : ViewModel() {
     }
 
     fun addOrUpdate() {
-        val name = nameInput.value!!
-        val email = emailInput.value!!
+        if (isUpdating) {
+            val user = updatingUser ?: return
+            user.name = nameInput.value ?: return
+            user.email = emailInput.value ?: return
+            update(user)
+            finishUpdate()
+        } else {
+            val name = nameInput.value ?: return
+            val email = emailInput.value ?: return
 
-        insert(User(0, name, email))
+            insert(User(0, name, email))
 
-        nameInput.value = ""
-        emailInput.value = ""
+            nameInput.value = ""
+            emailInput.value = ""
+        }
     }
 
     fun clearOrDelete() {
-        deleteAll()
+        if (isUpdating) {
+            val user = updatingUser ?: return
+            delete(user)
+            finishUpdate()
+        } else {
+            deleteAll()
+        }
     }
 
-    fun insert(user: User) = viewModelScope.launch(IO) {
+    private fun insert(user: User) = viewModelScope.launch(IO) {
         repo.insert(user)
     }
 
-    fun update(user: User) = viewModelScope.launch(IO) {
+    private fun update(user: User) = viewModelScope.launch(IO) {
         repo.update(user)
     }
 
-    fun delete(user: User) = viewModelScope.launch(IO) {
+    private fun delete(user: User) = viewModelScope.launch(IO) {
         repo.delete(user)
     }
 
-    fun deleteAll() = viewModelScope.launch(IO) {
+    private fun deleteAll() = viewModelScope.launch(IO) {
         repo.deleteAll()
+    }
+
+    fun initUpdate(user: User) {
+        isUpdating = true
+        updatingUser = user
+        addOrUpdateButtonText.value = "Update"
+        clearOrDeleteButtonText.value = "Delete"
+        nameInput.value = user.name
+        emailInput.value = user.email
+    }
+
+    private fun finishUpdate() {
+        isUpdating = false
+        updatingUser = null
+        addOrUpdateButtonText.value = "Add"
+        clearOrDeleteButtonText.value = "Clear"
+        nameInput.value = ""
+        emailInput.value = ""
     }
 }
