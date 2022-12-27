@@ -1,5 +1,6 @@
 package com.example.example_room
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -16,6 +17,7 @@ import com.example.example_room.db.UserViewModelFactory
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var viewModel: UserViewModel
+    private lateinit var adapter: RecyclerViewAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,25 +33,28 @@ class MainActivity : AppCompatActivity() {
         initRecyclerView()
 
         viewModel.message.observe(this) {
-            it.getContentIfNotHandled().let {
-                if (it == null)
+            it.getContentIfNotHandled().let { msg ->
+                if (msg == null)
                     return@let
 
-                Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
             }
         }
     }
 
     private fun initRecyclerView() {
         binding.rvDatabase.layoutManager = LinearLayoutManager(this)
+        adapter = RecyclerViewAdapter { selectedUser: User -> itemClickListener(selectedUser) }
+        binding.rvDatabase.adapter = adapter
+
         displayUserList()
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun displayUserList() {
         viewModel.users.observe(this) {
-            binding.rvDatabase.adapter = RecyclerViewAdapter(it) { selectedUser: User ->
-                itemClickListener(selectedUser)
-            }
+            adapter.updateList(it)
+            adapter.notifyDataSetChanged()
         }
     }
 
