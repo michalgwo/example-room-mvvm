@@ -1,5 +1,6 @@
 package com.example.example_room
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -20,6 +21,11 @@ class UserViewModel(private val repo: UserRepository) : ViewModel() {
     var addOrUpdateButtonText = MutableLiveData<String>()
     var clearOrDeleteButtonText = MutableLiveData<String>()
 
+    private var statusMessage = MutableLiveData<Event<Int>>()
+
+    val message: LiveData<Event<Int>>
+        get() = statusMessage
+
     init {
         addOrUpdateButtonText.value = "Add"
         clearOrDeleteButtonText.value = "Clear"
@@ -32,6 +38,7 @@ class UserViewModel(private val repo: UserRepository) : ViewModel() {
             user.email = emailInput.value ?: return
             update(user)
             finishUpdate()
+            statusMessage.value = Event(R.string.user_updated)
         } else {
             val name = nameInput.value ?: return
             val email = emailInput.value ?: return
@@ -40,6 +47,7 @@ class UserViewModel(private val repo: UserRepository) : ViewModel() {
 
             nameInput.value = ""
             emailInput.value = ""
+            statusMessage.value = Event(R.string.user_inserted)
         }
     }
 
@@ -48,8 +56,10 @@ class UserViewModel(private val repo: UserRepository) : ViewModel() {
             val user = updatingUser ?: return
             delete(user)
             finishUpdate()
+            statusMessage.value = Event(R.string.user_deleted)
         } else {
             deleteAll()
+            statusMessage.value = Event(R.string.all_users_deleted)
         }
     }
 

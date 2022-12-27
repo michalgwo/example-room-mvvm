@@ -2,4 +2,8 @@
     <string name="app_name">Example-Room</string>
     <string name="name">Name</string>
     <string name="email">Email</string>
+    <string name="user_inserted">User inserted</string>
+    <string name="user_updated">User updated</string>
+    <string name="user_deleted">User deleted</string>
+    <string name="all_users_deleted">All users deleted</string>
 </resources>

@@ -1,6 +1,7 @@
 package com.example.example_room
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
@@ -28,6 +29,15 @@ class MainActivity : AppCompatActivity() {
         binding.user = viewModel
         binding.lifecycleOwner = this
         initRecyclerView()
+
+        viewModel.message.observe(this) {
+            it.getContentIfNotHandled().let {
+                if (it == null)
+                    return@let
+
+                Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun initRecyclerView() {
