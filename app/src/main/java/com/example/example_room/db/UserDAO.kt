@@ -10,16 +10,16 @@ import androidx.room.Update
 @Dao
 interface UserDAO {
     @Insert
-    suspend fun insert(user: User)
+    suspend fun insert(user: User): Long
 
     @Update
-    suspend fun update(user: User)
+    suspend fun update(user: User): Int
 
     @Delete
-    suspend fun delete(user: User)
+    suspend fun delete(user: User): Int
 
     @Query("DELETE FROM user_data_table")
-    suspend fun deleteAll()
+    suspend fun deleteAll(): Int
 
     @Query("SELECT * FROM user_data_table")
     fun getAll(): LiveData<List<User>>

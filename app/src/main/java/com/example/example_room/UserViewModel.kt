@@ -7,7 +7,9 @@ import androidx.lifecycle.viewModelScope
 import com.example.example_room.db.User
 import com.example.example_room.db.UserRepository
 import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class UserViewModel(private val repo: UserRepository) : ViewModel() {
     private var isUpdating = false
@@ -37,17 +39,10 @@ class UserViewModel(private val repo: UserRepository) : ViewModel() {
             user.name = nameInput.value ?: return
             user.email = emailInput.value ?: return
             update(user)
-            finishUpdate()
-            statusMessage.value = Event(R.string.user_updated)
         } else {
             val name = nameInput.value ?: return
             val email = emailInput.value ?: return
-
             insert(User(0, name, email))
-
-            nameInput.value = ""
-            emailInput.value = ""
-            statusMessage.value = Event(R.string.user_inserted)
         }
     }
 
@@ -55,28 +50,57 @@ class UserViewModel(private val repo: UserRepository) : ViewModel() {
         if (isUpdating) {
             val user = updatingUser ?: return
             delete(user)
-            finishUpdate()
-            statusMessage.value = Event(R.string.user_deleted)
         } else {
             deleteAll()
-            statusMessage.value = Event(R.string.all_users_deleted)
         }
     }
 
     private fun insert(user: User) = viewModelScope.launch(IO) {
-        repo.insert(user)
+        val userId = repo.insert(user)
+        withContext(Main) {
+            if (userId > -1) {
+                nameInput.value = ""
+                emailInput.value = ""
+                statusMessage.value = Event(R.string.user_inserted)
+            } else {
+                statusMessage.value = Event(R.string.error_occurred)
+            }
+        }
     }
 
     private fun update(user: User) = viewModelScope.launch(IO) {
-        repo.update(user)
+        val numberOfRows = repo.update(user)
+        withContext(Main) {
+            if (numberOfRows > 0) {
+                finishUpdate()
+                statusMessage.value = Event(R.string.user_updated)
+            } else {
+                statusMessage.value = Event(R.string.error_occurred)
+            }
+        }
     }
 
     private fun delete(user: User) = viewModelScope.launch(IO) {
-        repo.delete(user)
+        val numberOfRows = repo.delete(user)
+        withContext(Main) {
+            if (numberOfRows > 0) {
+                finishUpdate()
+                statusMessage.value = Event(R.string.user_deleted)
+            } else {
+                statusMessage.value = Event(R.string.error_occurred)
+            }
+        }
     }
 
     private fun deleteAll() = viewModelScope.launch(IO) {
-        repo.deleteAll()
+        val numberOfRows = repo.deleteAll()
+        withContext(Main) {
+            if (numberOfRows > 0) {
+                statusMessage.value = Event(R.string.all_users_deleted)
+            } else {
+                statusMessage.value = Event(R.string.error_occurred)
+            }
+        }
     }
 
     fun initUpdate(user: User) {
