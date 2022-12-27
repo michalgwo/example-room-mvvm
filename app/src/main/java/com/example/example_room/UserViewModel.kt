@@ -1,5 +1,6 @@
 package com.example.example_room
 
+import android.util.Patterns
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -34,6 +35,14 @@ class UserViewModel(private val repo: UserRepository) : ViewModel() {
     }
 
     fun addOrUpdate() {
+        if (nameInput.value.isNullOrBlank() || emailInput.value.isNullOrBlank()) {
+            statusMessage.value = Event(R.string.error_fill_out_the_form)
+            return
+        } else if (!Patterns.EMAIL_ADDRESS.matcher(emailInput.value.toString()).matches()) {
+            statusMessage.value = Event(R.string.error_incorrect_email)
+            return
+        }
+
         if (isUpdating) {
             val user = updatingUser ?: return
             user.name = nameInput.value ?: return

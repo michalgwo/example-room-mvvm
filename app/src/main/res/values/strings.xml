@@ -7,4 +7,6 @@
     <string name="user_deleted">User deleted</string>
     <string name="all_users_deleted">All users deleted</string>
     <string name="error_occurred">Error occurred</string>
+    <string name="error_fill_out_the_form">Please fill out the form</string>
+    <string name="error_incorrect_email">Email is incorrect</string>
 </resources>
