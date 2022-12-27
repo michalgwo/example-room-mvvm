@@ -9,4 +9,8 @@
     <string name="error_occurred">Error occurred</string>
     <string name="error_fill_out_the_form">Please fill out the form</string>
     <string name="error_incorrect_email">Email is incorrect</string>
+    <string name="add">Add</string>
+    <string name="update">Update</string>
+    <string name="delete">Delete</string>
+    <string name="clear">Clear</string>
 </resources>

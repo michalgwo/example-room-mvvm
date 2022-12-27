@@ -21,8 +21,8 @@ class UserViewModel(private val repo: UserRepository) : ViewModel() {
     var nameInput = MutableLiveData<String>()
     var emailInput = MutableLiveData<String>()
 
-    var addOrUpdateButtonText = MutableLiveData<String>()
-    var clearOrDeleteButtonText = MutableLiveData<String>()
+    var addOrUpdateButtonText = MutableLiveData<Int>()
+    var clearOrDeleteButtonText = MutableLiveData<Int>()
 
     private var statusMessage = MutableLiveData<Event<Int>>()
 
@@ -30,8 +30,8 @@ class UserViewModel(private val repo: UserRepository) : ViewModel() {
         get() = statusMessage
 
     init {
-        addOrUpdateButtonText.value = "Add"
-        clearOrDeleteButtonText.value = "Clear"
+        addOrUpdateButtonText.value = R.string.add
+        clearOrDeleteButtonText.value = R.string.clear
     }
 
     fun addOrUpdate() {
@@ -115,8 +115,8 @@ class UserViewModel(private val repo: UserRepository) : ViewModel() {
     fun initUpdate(user: User) {
         isUpdating = true
         updatingUser = user
-        addOrUpdateButtonText.value = "Update"
-        clearOrDeleteButtonText.value = "Delete"
+        addOrUpdateButtonText.value = R.string.update
+        clearOrDeleteButtonText.value = R.string.delete
         nameInput.value = user.name
         emailInput.value = user.email
     }
@@ -124,8 +124,8 @@ class UserViewModel(private val repo: UserRepository) : ViewModel() {
     private fun finishUpdate() {
         isUpdating = false
         updatingUser = null
-        addOrUpdateButtonText.value = "Add"
-        clearOrDeleteButtonText.value = "Clear"
+        addOrUpdateButtonText.value = R.string.add
+        clearOrDeleteButtonText.value = R.string.clear
         nameInput.value = ""
         emailInput.value = ""
     }
